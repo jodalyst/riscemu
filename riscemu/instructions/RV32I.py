@@ -266,12 +266,95 @@ class RV32I(InstructionSet):
         self.regs.set(reg, Int32(self.pc))
         self.pc = addr
 
+    # zero pseudo-ops:
+    #beqz, bnez, bltz, bgez, bgtz, blez
+
+    def instruction_beqz(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 2)
+        rs1 = ins.get_reg(0)
+        dst = ins.get_imm(1)
+        if self.regs.get(rs1) == 0:
+            self.pc = dst
+
+    def instruction_bnez(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 2)
+        rs1 = ins.get_reg(0)
+        dst = ins.get_imm(1)
+        if self.regs.get(rs1) != 0:
+            self.pc = dst
+
+    def instruction_bltz(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 2)
+        rs1 = ins.get_reg(0)
+        dst = ins.get_imm(1)
+        if self.regs.get(rs1) < 0:
+            self.pc = dst
+
+    def instruction_bgtz(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 2)
+        rs1 = ins.get_reg(0)
+        dst = ins.get_imm(1)
+        if self.regs.get(rs1) > 0:
+            self.pc = dst
+
+    def instruction_bgez(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 2)
+        rs1 = ins.get_reg(0)
+        dst = ins.get_imm(1)
+        if self.regs.get(rs1) >= 0:
+            self.pc = dst
+
+    def instruction_blez(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 2)
+        rs1 = ins.get_reg(0)
+        dst = ins.get_imm(1)
+        if self.regs.get(rs1) <= 0:
+            self.pc = dst
+
+
+    #jds pseudo-op
+    def instruction_call(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 1)
+        addr = ins.get_imm(0)
+        self.regs.set('ra', self.pc)
+        self.pc = addr
+
+    #jds pseudo-op
+    def instruction_jr(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 1)
+        reg = ins.get_reg(0)
+        val = self.regs.get(reg)
+        thing = val&(0xFFFFFFFE)
+        #self.regs.set(reg, self.pc)
+        self.pc = thing
+
+    #modified by jds
+    def instruction_jalr(self, ins: 'Instruction'):
+        reg = 'ra'  # default register is ra
+        if len(ins.args) == 1:
+            addr = ins.get_reg(0)
+            thing = self.regs.get(addr)
+            addr = thing #&(0xFFFFFFFE)
+        else:
+            ASSERT_LEN(ins.args, 2)
+            reg, addr = self.parse_mem_ins(ins)
+            #reg = ins.get_reg(0)
+            #addr = ins.get_imm(1)
+            #thing = self.regs.get(addr)
+            #addr = addr&(0xFFFFFFFE)
+            #reg = ins.get_reg(0)
+            #addr = ins.get_imm(1)
+        self.regs.set(reg, self.pc)
+        self.pc = addr
+
+    '''
     def instruction_jalr(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 2)
         reg = ins.get_reg(0)
         addr = ins.get_imm(1)
         self.regs.set(reg, Int32(self.pc))
         self.pc = addr
+    '''
 
     def instruction_ret(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 0)

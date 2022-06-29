@@ -102,7 +102,7 @@ class ParseContext:
         return self.program.base if self.program.base is not None else 0
 
     def __repr__(self):
-        return "{}(\n\tsetion={},\n\tprogram={}\n)".format(
+        return "{}(\n\tsection={},\n\tprogram={}\n)".format(
             self.__class__.__name__, self.section, self.program
         )
 

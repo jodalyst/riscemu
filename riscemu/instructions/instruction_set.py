@@ -18,7 +18,7 @@ class InstructionSet(ABC):
 
     Each instruction set has to inherit from this class. Each instruction should be it's own method:
 
-    instruction_<name>(self, ins: LoadedInstruction)
+    instruction_<name>(self, ins: Instruction)
 
     instructions containing a dot '.' should replace it with an underscore.
     """
