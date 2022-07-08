@@ -21,6 +21,7 @@ class InstructionMemorySection(MemorySection):
         raise MemoryAccessException("Cannot write raw bytes to instruction section", self.base + offset, size, 'write')
 
     def read_ins(self, offset: T_RelativeAddress) -> Instruction:
+        offset = int(offset) # not too sure about this...might be dangerous, but at same time, I can't think of a failure mode jds
         if offset % 4 != 0:
             raise MemoryAccessException("Unaligned instruction fetch!", self.base + offset, 4, 'instruction fetch')
         return self.instructions[offset // 4]
