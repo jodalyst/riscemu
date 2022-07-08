@@ -97,7 +97,7 @@ class Registers:
         from .types import Int32
         # remove after refactoring is complete
         if not isinstance(val, Int32):
-            raise RuntimeError("Setting register to non-Int32 value! Please refactor your code!")
+            raise RuntimeError(f"Setting register {reg} to non-Int32 value ({val})! Please refactor your code!")
 
         if reg == 'zero':
             return False

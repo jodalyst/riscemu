@@ -24,6 +24,10 @@ class ElfInstruction(Instruction):
         return self.args[-1], self.args[-2]
 
     def get_reg(self, num: int) -> str:
+        '''if self.args[num] in X_REGS:
+            return RISCV_REGS[self.args[num]]
+        jds
+        '''
         return RISCV_REGS[self.args[num]]
 
     def __repr__(self) -> str:

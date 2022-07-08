@@ -311,12 +311,33 @@ class RV32I(InstructionSet):
         if self.regs.get(rs1) <= 0:
             self.pc = dst
 
+    #pseudo instructions bgt ble bgtu bleu
+
+    def instruction_bgt(self, ins: 'Instruction'):
+        rs1, rs2, dst = self.parse_rs_rs_imm(ins)
+        if rs1 > rs2:
+            self.pc = dst.unsigned_value
+
+    def instruction_ble(self, ins: 'Instruction'):
+        rs1, rs2, dst = self.parse_rs_rs_imm(ins)
+        if rs1 <= rs2:
+            self.pc = dst.unsigned_value
+
+    def instruction_bgtu(self, ins: 'Instruction'):
+        rs1, rs2, dst = self.parse_rs_rs_imm(ins, signed=False)
+        if rs1 > rs2:
+            self.pc = dst.unsigned_value
+
+    def instruction_bleu(self, ins: 'Instruction'):
+        rs1, rs2, dst = self.parse_rs_rs_imm(ins, signed=False)
+        if rs1 <= rs2:
+            self.pc = dst.unsigned_value
 
     #jds pseudo-op
     def instruction_call(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 1)
         addr = ins.get_imm(0)
-        self.regs.set('ra', self.pc)
+        self.regs.set('ra', Int32(self.pc))
         self.pc = addr
 
     #jds pseudo-op
@@ -336,7 +357,7 @@ class RV32I(InstructionSet):
             thing = self.regs.get(addr)
             addr = thing #&(0xFFFFFFFE)
         else:
-            ASSERT_LEN(ins.args, 2)
+            # ASSERT_LEN(ins.args, 2)
             reg, addr = self.parse_mem_ins(ins)
             #reg = ins.get_reg(0)
             #addr = ins.get_imm(1)
@@ -344,11 +365,12 @@ class RV32I(InstructionSet):
             #addr = addr&(0xFFFFFFFE)
             #reg = ins.get_reg(0)
             #addr = ins.get_imm(1)
-        self.regs.set(reg, self.pc)
+        self.regs.set(reg, Int32(self.pc))
         self.pc = addr
 
     '''
     def instruction_jalr(self, ins: 'Instruction'):
+        print(ins.args)
         ASSERT_LEN(ins.args, 2)
         reg = ins.get_reg(0)
         addr = ins.get_imm(1)
