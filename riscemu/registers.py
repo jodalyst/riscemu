@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 from collections import defaultdict
 
 from .helpers import *
+from .decoder.regs import X_REGS, RISCV_REGS
 
 if typing.TYPE_CHECKING:
     from .types import Int32
@@ -93,16 +94,17 @@ class Registers:
         :param mark_set: If True, marks this register as "last accessed" (only used internally)
         :return: If the operation was successful
         """
-
         from .types import Int32
         # remove after refactoring is complete
         if not isinstance(val, Int32):
             raise RuntimeError(f"Setting register {reg} to non-Int32 value ({val})! Please refactor your code!")
-
+        # supporting X registers
+        if reg in X_REGS:
+            reg = RISCV_REGS[X_REGS.index(reg)]
         if reg == 'zero':
             return False
-        # if reg not in Registers.all_registers():
-        #    raise InvalidRegisterException(reg)
+        if reg not in RISCV_REGS:
+            raise InvalidRegisterException(reg)
         # replace fp register with s1, as these are the same register
         if reg == 'fp':
             reg = 's1'
@@ -119,6 +121,9 @@ class Registers:
         :param mark_read: If the register should be markes as "last read" (only used internally)
         :return: The contents of register reg
         """
+        # supporting X registers
+        if reg in X_REGS:
+            reg = RISCV_REGS[X_REGS.index(reg)]
         # if reg not in Registers.all_registers():
         #    raise InvalidRegisterException(reg)
         if reg == 'fp':
@@ -136,7 +141,7 @@ class Registers:
         return ['zero', 'ra', 'sp', 'gp', 'tp', 's0', 'fp',
                 't0', 't1', 't2', 't3', 't4', 't5', 't6',
                 's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10', 's11',
-                'a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7',
+                'a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'utilreg',
                 'ft0', 'ft1', 'ft2', 'ft3', 'ft4', 'ft5', 'ft6', 'ft7',
                 'fs0', 'fs1', 'fs2', 'fs3', 'fs4', 'fs5', 'fs6', 'fs7', 'fs8', 'fs9', 'fs10', 'fs11',
                 'fa0', 'fa1', 'fa2', 'fa3', 'fa4', 'fa5', 'fa6', 'fa7']

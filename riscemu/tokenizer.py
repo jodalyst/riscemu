@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import List, Iterable
 
-from riscemu.decoder import RISCV_REGS
+from riscemu.decoder import RISCV_REGS, X_REGS
 from riscemu.types.exceptions import ParseException
 
 LINE_COMMENT_STARTERS = ('#', ';', '//')
@@ -52,7 +52,8 @@ def tokenize(input: Iterable[str]) -> Iterable[Token]:
         line.strip(' \t\n')
         if not line:
             continue
-
+        line = line.replace(',', ' , ') # hack that adds extra white space (but ensures space is there) jds
+        # i'd prefer to do this than rewrite/rename how the tokenizing is done (which essentially assumes white space)
         parts = list(part for part in split_whitespace_respecting_quotes(line) if part)
 
         yield from parse_line(parts)
@@ -86,8 +87,10 @@ def parse_arg(arg: str) -> Iterable[Token]:
     mem_match_resul = re.match(MEMORY_ADDRESS_PATTERN, arg)
     if mem_match_resul:
         register = mem_match_resul.group(2).lower()
-        if register not in RISCV_REGS:
-            raise ParseException(f'"{register}" is not a valid register!')
+        if register in X_REGS:
+            register = RISCV_REGS[X_REGS.index(register)]
+        elif register not in RISCV_REGS:
+            raise ParseException(f'Register "{register}" is not a valid register!')
         yield Token(TokenType.ARGUMENT, register)
         yield Token(TokenType.ARGUMENT, mem_match_resul.group(1))
     else:

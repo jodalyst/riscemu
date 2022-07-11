@@ -6,7 +6,7 @@ if __name__ == '__main__':
     from .decoder import *
     from .formats import *
     from .instruction_table import *
-    from .regs import RISCV_REGS
+    from .regs import RISCV_REGS,X_REGS
 
     sess_vars = globals()
     sess_vars.update(locals())

@@ -395,7 +395,7 @@ class RV32I(InstructionSet):
             # FIXME: add exception for syscall not supported or something
             raise
 
-        syscall = Syscall(self.regs.get('a7'), self.cpu)
+        syscall = Syscall(self.regs.get('utilreg'), self.cpu)
         self.cpu.syscall_int.handle_syscall(syscall)
 
     def instruction_sbreak(self, ins: 'Instruction'):

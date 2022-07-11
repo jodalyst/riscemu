@@ -1,5 +1,5 @@
 from typing import Dict, Callable, List, Union
-from .regs import RISCV_REGS
+from .regs import RISCV_REGS,X_REGS
 
 def op(ins: int):
     return (ins >> 2) & 31
