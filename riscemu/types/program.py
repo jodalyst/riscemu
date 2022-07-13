@@ -60,13 +60,15 @@ class Program:
 
     @property
     def entrypoint(self):
-        if '_start' in self.context.labels:
-            return self.context.labels.get('_start')
-        if 'main' in self.context.labels:
-            return self.context.labels.get('main')
+        # if '_start' in self.context.labels:
+        #    return self.context.labels.get('_start')
+        if 'starttoo' in self.context.labels: # kind of dumb but chose weird starting entry point to avoid collissions with students naming
+            return self.context.labels.get('starttoo')
+        '''
         for sec in self.sections:
             if get_section_base_name(sec.name) == '.text' and sec.flags.executable:
                 return sec.base
+        '''
 
     def loaded_trigger(self, at_addr: T_AbsoluteAddress):
         """
