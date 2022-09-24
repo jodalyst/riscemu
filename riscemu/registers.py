@@ -128,6 +128,8 @@ class Registers:
         #    raise InvalidRegisterException(reg)
         if reg == 'fp':
             reg = 's0'
+        if reg not in RISCV_REGS:
+            raise ParseException(f'Invalid register "{reg}"')
         if mark_read:
             self.last_read = reg
         return self.vals[reg]

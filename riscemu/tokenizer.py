@@ -55,7 +55,7 @@ def tokenize(input: Iterable[str]) -> Iterable[Token]:
         line = line.replace(',', ' , ') # hack that adds extra white space (but ensures space is there) jds
         # i'd prefer to do this than rewrite/rename how the tokenizing is done (which essentially assumes white space)
         parts = list(part for part in split_whitespace_respecting_quotes(line) if part)
-
+        c = parse_line(parts)
         yield from parse_line(parts)
         yield NEWLINE
 
@@ -73,12 +73,30 @@ def parse_line(parts: List[str]) -> Iterable[Token]:
         return
     else:
         yield Token(TokenType.INSTRUCTION_NAME, first_token)
-
+    need_comma = False
     for part in parts[1:]:
         if part == ',':
+            if not need_comma:
+                bad_line = ""
+                for p in parts:
+                    bad_line += p + " "
+                raise ParseException(f'Parsing issue: excess commas at [{bad_line}]')
             yield COMMA
+            need_comma = False
             continue
-        yield from parse_arg(part)
+        else:
+            if need_comma:
+                bad_line = ""
+                for p in parts:
+                    bad_line += p + " "
+                raise ParseException(f'Parsing issue: missing comma at [{bad_line}]')
+            need_comma = True
+            yield from parse_arg(part)
+    if parts[-1]==',':
+        bad_line = ""
+        for p in parts:
+          bad_line += p + " "
+        raise ParseException(f'Line ending in comma at [{bad_line}]')
 
 
 def parse_arg(arg: str) -> Iterable[Token]:
