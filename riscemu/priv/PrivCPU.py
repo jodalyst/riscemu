@@ -164,6 +164,7 @@ class PrivCPU(CPU):
             self.run_instruction(ins)
             self.pc += self.INS_XLEN
         except CpuTrap as trap:
+            print("EXCEPT")
             self._handle_trap(trap)
             if trap.interrupt == 0 and not isinstance(trap, EcallTrap):
                 print(FMT_CPU + "[CPU] Trap {} encountered at {} (0x{:x})".format(

@@ -108,7 +108,8 @@ class AssemblyFileLoader(ProgramLoader):
     """
     def parse(self) -> Program:
         with open(self.source_path, 'r') as f:
-            return parse_tokens(self.filename, tokenize(f))
+            p = parse_tokens(self.filename, tokenize(f))
+            return p
 
     @classmethod
     def can_parse(cls, source_path: str) -> float:

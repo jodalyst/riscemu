@@ -57,7 +57,7 @@ class CPU(ABC):
             self.instructions[ins.name](ins)
         else:
             # this should never be reached, as unknown instructions are imparseable
-            raise RuntimeError("Unknown instruction: {}".format(ins))
+            raise RuntimeError("Unknown instruction: {}".format(ins.name))
 
     def load_program(self, program: Program):
         self.mmu.load_program(program)
