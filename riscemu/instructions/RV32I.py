@@ -23,43 +23,36 @@ class RV32I(InstructionSet):
     """
 
     def instruction_lb(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
 
         rd, addr = self.parse_mem_ins(ins)
         self.regs.set(rd, Int32.sign_extend(self.mmu.read(addr.unsigned_value, 1), 8))
 
     def instruction_lh(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
         rd, addr = self.parse_mem_ins(ins)
         self.regs.set(rd, Int32.sign_extend(self.mmu.read(addr.unsigned_value, 2), 16))
 
     def instruction_lw(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
+        #ASSERT_LEN(ins.args, 2)
         rd, addr = self.parse_mem_ins(ins)
         self.regs.set(rd, Int32(self.mmu.read(addr.unsigned_value, 4)))
 
     def instruction_lbu(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
         rd, addr = self.parse_mem_ins(ins)
         self.regs.set(rd, Int32(self.mmu.read(addr.unsigned_value, 1)))
 
     def instruction_lhu(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
         rd, addr = self.parse_mem_ins(ins)
         self.regs.set(rd, Int32(self.mmu.read(addr.unsigned_value, 2)))
 
     def instruction_sb(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
         rd, addr = self.parse_mem_ins(ins)
         self.mmu.write(addr.unsigned_value, 1, self.regs.get(rd).to_bytes(1))
 
     def instruction_sh(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
         rd, addr = self.parse_mem_ins(ins)
         self.mmu.write(addr.unsigned_value, 2, self.regs.get(rd).to_bytes(2))
 
     def instruction_sw(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
         rd, addr = self.parse_mem_ins(ins)
         self.mmu.write(addr.unsigned_value, 4, self.regs.get(rd).to_bytes(4))
 
@@ -389,7 +382,7 @@ class RV32I(InstructionSet):
             thing = self.regs.get(addr)
             addr = thing #&(0xFFFFFFFE)
         else:
-            ASSERT_LEN(ins.args, 2)
+            #ASSERT_LEN(ins.args, 2)
             reg, addr = self.parse_mem_ins(ins)
             #reg = ins.get_reg(0)
             #addr = ins.get_imm(1)

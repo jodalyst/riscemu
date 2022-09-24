@@ -53,6 +53,7 @@ class CPU(ABC):
 
         :param ins: The instruction to execute
         """
+        print(ins)
         if ins.name in self.instructions:
             self.instructions[ins.name](ins)
         else:
