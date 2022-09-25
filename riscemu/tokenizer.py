@@ -72,10 +72,8 @@ def parse_line(parts: List[str]) -> Iterable[Token]:
         return
     else:
         yield Token(TokenType.INSTRUCTION_NAME, first_token)
-    print(first_token)
     need_comma = False
     for part in parts[1:]:
-        print(part)
         if part == ',':
             if not need_comma:
                 bad_line = ""

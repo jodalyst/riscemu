@@ -294,42 +294,42 @@ class RV32I(InstructionSet):
         ASSERT_LEN(ins.args, 2)
         rs1 = ins.get_reg(0)
         dst = ins.get_imm(1)
-        if self.regs.get(rs1) == 0:
+        if Int32(self.regs.get(rs1)) == 0:
             self.pc = dst
 
     def instruction_bnez(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 2)
         rs1 = ins.get_reg(0)
         dst = ins.get_imm(1)
-        if self.regs.get(rs1) != 0:
+        if Int32(self.regs.get(rs1)) != 0:
             self.pc = dst
 
     def instruction_bltz(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 2)
         rs1 = ins.get_reg(0)
         dst = ins.get_imm(1)
-        if self.regs.get(rs1) < 0:
+        if Int32(self.regs.get(rs1)) < 0:
             self.pc = dst
 
     def instruction_bgtz(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 2)
         rs1 = ins.get_reg(0)
         dst = ins.get_imm(1)
-        if self.regs.get(rs1) > 0:
+        if Int32(self.regs.get(rs1)) > 0:
             self.pc = dst
 
     def instruction_bgez(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 2)
         rs1 = ins.get_reg(0)
         dst = ins.get_imm(1)
-        if self.regs.get(rs1) >= 0:
+        if Int32(self.regs.get(rs1)) >= 0:
             self.pc = dst
 
     def instruction_blez(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 2)
         rs1 = ins.get_reg(0)
         dst = ins.get_imm(1)
-        if self.regs.get(rs1) <= 0:
+        if Int32(self.regs.get(rs1)) <= 0:
             self.pc = dst
 
     #pseudo instructions bgt ble bgtu bleu
