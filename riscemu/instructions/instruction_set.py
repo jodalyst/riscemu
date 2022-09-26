@@ -90,34 +90,35 @@ class InstructionSet(ABC):
         Returns the name of rd, the value in rs and the immediate imm
         """
         ASSERT_LEN(ins.args, 3)
+        val = ins.get_imm(2)&0xFFF
+        if val>2047:
+          val = -(4096-val)
         if signed:
-            val = ins.get_imm(2)&0xFFF
-            if val>2047:
-              val = -(4096-val)
             return ins.get_reg(0), \
                    Int32(self.get_reg_content(ins, 1)), \
                    Int32(val)
         else:
             return ins.get_reg(0), \
                    UInt32(self.get_reg_content(ins, 1)), \
-                   UInt32(ins.get_imm(2))
+                   UInt32(val)
 
     def parse_rs_rs_imm(self, ins: 'Instruction', signed=True) -> Tuple[Int32, Int32, Int32]:
         """
         Assumes the command is in <name> rs1, rs2, imm format
         Returns the values in rs1, rs2 and the immediate imm
         """
+
+        val = ins.get_imm(2)&0xFFF
+        if val>2047:
+          val = -(4096-val)
         if signed:
-            val = ins.get_imm(2)&0xFFF
-            if val>2047:
-              val = -(4096-val)
             return Int32(self.get_reg_content(ins, 0)), \
                    Int32(self.get_reg_content(ins, 1)), \
                    Int32(val)
         else:
             return UInt32(self.get_reg_content(ins, 0)), \
                    UInt32(self.get_reg_content(ins, 1)), \
-                   UInt32(ins.get_imm(2))
+                   UInt32(val)
 
     def get_reg_content(self, ins: 'Instruction', ind: int) -> Int32:
         """

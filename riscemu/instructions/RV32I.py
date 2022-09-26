@@ -213,6 +213,7 @@ class RV32I(InstructionSet):
     def instruction_slti(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 3)
         rd, rs1, imm = self.parse_rd_rs_imm(ins)
+        #print(f"rs1:{rs1} and imm: {imm}")
         self.regs.set(
             rd,
             Int32(int(rs1 < imm))
@@ -229,6 +230,7 @@ class RV32I(InstructionSet):
     def instruction_sltiu(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 3)
         dst, rs1, imm = self.parse_rd_rs_imm(ins, signed=False)
+        #print(f"rs1:{rs1} and imm: {imm}")
         self.regs.set(
             dst,
             Int32(int(rs1 < imm))
