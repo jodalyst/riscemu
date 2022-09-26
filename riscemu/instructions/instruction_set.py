@@ -91,9 +91,12 @@ class InstructionSet(ABC):
         """
         ASSERT_LEN(ins.args, 3)
         if signed:
+            val = ins.get_imm(2)&0xFFF
+            if val>2047:
+              val = -(4096-val)
             return ins.get_reg(0), \
                    Int32(self.get_reg_content(ins, 1)), \
-                   Int32(ins.get_imm(2))
+                   Int32(val)
         else:
             return ins.get_reg(0), \
                    UInt32(self.get_reg_content(ins, 1)), \
@@ -105,9 +108,12 @@ class InstructionSet(ABC):
         Returns the values in rs1, rs2 and the immediate imm
         """
         if signed:
+            val = ins.get_imm(2)&0xFFF
+            if val>2047:
+              val = -(4096-val)
             return Int32(self.get_reg_content(ins, 0)), \
                    Int32(self.get_reg_content(ins, 1)), \
-                   Int32(ins.get_imm(2))
+                   Int32(val)
         else:
             return UInt32(self.get_reg_content(ins, 0)), \
                    UInt32(self.get_reg_content(ins, 1)), \
