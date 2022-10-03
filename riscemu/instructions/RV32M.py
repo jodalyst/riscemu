@@ -12,6 +12,7 @@ class RV32M(InstructionSet):
     """
     The RV32M Instruction set, containing multiplication and division instructions
     """
+    '''
     def instruction_mul(self, ins: 'Instruction'):
         rd, rs1, rs2 = self.parse_rd_rs_rs(ins)
         self.regs.set(
@@ -59,3 +60,4 @@ class RV32M(InstructionSet):
             rd,
             rs1 % rs2
         )
+    '''
