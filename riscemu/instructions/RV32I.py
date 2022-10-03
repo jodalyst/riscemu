@@ -103,7 +103,7 @@ class RV32I(InstructionSet):
         src2 = ins.get_reg(2)
         self.regs.set(
             dst,
-            self.regs.get(src1) >> (self.regs.get(src2) & 0b11111)
+            Int32(self.regs.get(src1)) >> (self.regs.get(src2) & 0b11111)
         )
 
     def instruction_srai(self, ins: 'Instruction'):
@@ -113,7 +113,7 @@ class RV32I(InstructionSet):
         imm = ins.get_imm(2)
         self.regs.set(
             dst,
-            self.regs.get(src1) >> (imm & 0b11111)
+            Int32(self.regs.get(src1)) >> (imm & 0b11111)
         )
 
     def instruction_add(self, ins: 'Instruction'):
