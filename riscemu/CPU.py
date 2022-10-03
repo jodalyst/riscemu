@@ -103,7 +103,6 @@ class UserModeCPU(CPU):
             '',
             0
         )
-
         if not self.mmu.load_section(stack_sec, fixed_position=False):
             print(FMT_ERROR + "[CPU] Could not insert stack section!" + FMT_NONE)
             return False
@@ -114,6 +113,30 @@ class UserModeCPU(CPU):
             print(FMT_CPU + "[CPU] Created stack of size {} at 0x{:x}".format(
                 stack_size, stack_sec.base
             ) + FMT_NONE)
+
+        #ABSOLUTELY NOT STACK!
+        gpio_sec = BinaryDataMemorySection(
+            bytearray(stack_size),
+            '.gpio',
+            None,  # FIXME: why does a binary data memory section require a context?
+            '',
+            0x60004000
+        )
+        io_sec = BinaryDataMemorySection(
+            bytearray(stack_size),
+            '.io',
+            None,  # FIXME: why does a binary data memory section require a context?
+            '',
+            0x60009000
+        )
+
+        if not self.mmu.load_section(gpio_sec, fixed_position=True):
+            print(FMT_ERROR + "[CPU] Could not insert gpio section!" + FMT_NONE)
+            return False
+
+        if not self.mmu.load_section(io_sec, fixed_position=True):
+            print(FMT_ERROR + "[CPU] Could not insert io section!" + FMT_NONE)
+            return False
 
         return True
 
