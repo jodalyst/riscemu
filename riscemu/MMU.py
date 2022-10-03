@@ -244,6 +244,7 @@ class MMU:
             if self.has_continous_free_region(sec.base, sec.base + sec.size):
                 self.sections.append(sec)
                 self._update_state()
+                return True
             else:
                 print(FMT_MEM + '[MMU] Cannot place section {} at {}, space is occupied!'.format(sec, sec.base))
                 return False
