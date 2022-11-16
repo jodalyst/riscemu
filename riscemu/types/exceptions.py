@@ -40,7 +40,8 @@ def ASSERT_IMM_LEN(val, nbits, signed):
         max_p = 2**(nbits)-1
         min_p = 0
     if val>max_p or val<min_p:
-        raise ParseException("IMMEDIATE OUT OF RANGE: Value {} out of bounds [{},{}]".format(val,min_p,max_p), (val,))
+        pass
+        #raise ParseException("IMMEDIATE OUT OF RANGE: Value {} out of bounds [{},{}]".format(val,min_p,max_p), (val,))
 
 
 def ASSERT_EQ(a1, a2):
