@@ -32,7 +32,7 @@ class ParseException(RiscemuBaseException):
     def message(self):
         return FMT_PARSE + "{}(\"{}\", data={})".format(self.__class__.__name__, self.msg, self.data) + FMT_NONE
 
-def ASSERT_IMM_LEN(val, nbits, signed=True):
+def ASSERT_IMM_LEN(val, nbits, signed):
     if signed:
         max_p = 2**(nbits-1)-1
         min_p = -(2**(nbits-1))
