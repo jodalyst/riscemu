@@ -144,6 +144,7 @@ class RV32I(InstructionSet):
 
     def instruction_lui(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 2)
+        ASSERT_IMM_LEN(ins.get_imm(1),20,False)
         reg = ins.get_reg(0)
         imm = UInt32(ins.get_imm(1) << 12)
         self.regs.set(reg, Int32(imm))

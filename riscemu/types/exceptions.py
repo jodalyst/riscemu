@@ -32,6 +32,16 @@ class ParseException(RiscemuBaseException):
     def message(self):
         return FMT_PARSE + "{}(\"{}\", data={})".format(self.__class__.__name__, self.msg, self.data) + FMT_NONE
 
+def ASSERT_IMM_LEN(val, nbits, signed=True):
+    if signed:
+        max_p = 2**(nbits-1)-1
+        min_p = -(2**(nbits-1))
+    else:
+        max_p = 2**(nbits)-1
+        min_p = 0
+    if val>max_p or val<min_p:
+        raise ParseException("IMMEDIATE OUT OF RANGE: Value {} out of bounds [{},{}]".format(val,min_p,max_p), (val,))
+
 
 def ASSERT_EQ(a1, a2):
     if a1 != a2:

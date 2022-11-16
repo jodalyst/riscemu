@@ -8,7 +8,7 @@ from typing import Tuple, Callable, Dict
 
 from abc import ABC
 from ..CPU import CPU
-from riscemu.types.exceptions import ASSERT_LEN, ASSERT_IN
+from riscemu.types.exceptions import ASSERT_LEN, ASSERT_IN, ASSERT_IMM_LEN
 from ..types import Instruction, Int32, UInt32
 
 
@@ -90,6 +90,7 @@ class InstructionSet(ABC):
         Returns the name of rd, the value in rs and the immediate imm
         """
         ASSERT_LEN(ins.args, 3)
+        ASSERT_IMM_LEN(ins.get_imm(2),12,signed)
         val = ins.get_imm(2)&0xFFF
         if val>2047:
           val = -(4096-val)
@@ -109,6 +110,7 @@ class InstructionSet(ABC):
         """
 
         val = ins.get_imm(2)&0xFFF
+        ASSERT_IMM_LEN(ins.get_imm(2),12,signed)
         if val>2047:
           val = -(4096-val)
         if signed:
