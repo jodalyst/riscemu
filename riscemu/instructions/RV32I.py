@@ -32,8 +32,9 @@ class RV32I(InstructionSet):
         self.regs.set(rd, Int32.sign_extend(self.mmu.read(addr.unsigned_value, 2), 16))
 
     def instruction_lw(self, ins: 'Instruction'):
-        #ASSERT_LEN(ins.args, 2)
+        ASSERT_LEN(ins.args, 3) # this is how we teach it
         rd, addr = self.parse_mem_ins(ins)
+        ASSERT_WORD_ALIGNED(addr.unsigned_value, "lw {}, {}({})".format(ins.get_reg(0), ins.get_imm(2), ins.get_reg(1)))
         self.regs.set(rd, Int32(self.mmu.read(addr.unsigned_value, 4)))
 
     def instruction_lbu(self, ins: 'Instruction'):
@@ -53,7 +54,9 @@ class RV32I(InstructionSet):
         self.mmu.write(addr.unsigned_value, 2, self.regs.get(rd).to_bytes(2))
 
     def instruction_sw(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 3) # this is how we do it
         rd, addr = self.parse_mem_ins(ins)
+        ASSERT_WORD_ALIGNED(addr.unsigned_value, "sw {}, {}({})".format(ins.get_reg(0), ins.get_imm(2), ins.get_reg(1)))
         self.mmu.write(addr.unsigned_value, 4, self.regs.get(rd).to_bytes(4))
 
     def instruction_sll(self, ins: 'Instruction'):
