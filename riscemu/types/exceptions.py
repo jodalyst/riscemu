@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 from abc import abstractmethod
 from ..colors import *
 import typing
+from ..types import Int32
 
 if typing.TYPE_CHECKING:
     from . import Instruction
@@ -32,17 +33,25 @@ class ParseException(RiscemuBaseException):
     def message(self):
         return FMT_PARSE + "{}(\"{}\", data={})".format(self.__class__.__name__, self.msg, self.data) + FMT_NONE
 
-def ASSERT_IMM_LEN(val, nbits, signed):
-    if signed:
-        max_p = 2**(nbits-1)-1
-        min_p = -(2**(nbits-1))
-    else:
+def ASSERT_IMM_LEN(val, nbits, signed=True):
+    if signed==False:
         max_p = 2**(nbits)-1
         min_p = 0
-    if val>max_p or val<min_p:
-        pass
-        #raise ParseException("IMMEDIATE OUT OF RANGE: Value {} out of bounds [{},{}]".format(val,min_p,max_p), (val,))
-
+        # relatively easy to sort this one
+        if val>max_p or val<min_p:
+            #pass
+            raise ParseException("IMMEDIATE OUT OF RANGE FOR UNSIGNED: Value {} out of bounds [{},{}]".format(val,min_p,max_p), (val,))
+    else: #signed (note for sign extension):
+        max_p = 2**(nbits-1)-1
+        min_p = -(2**(nbits-1))
+        if val>max_p:  #in case of hex/binary spec check if we have leading 1
+            nval = -(2**(nbits)-val) #if so reinterpret this as negative value (nval)...then compare.
+            if nval>max_p or nval<min_p: #still report back using val to avoid confusion
+                raise ParseException("IMMEDIATE OUT OF RANGE FOR SIGNED: Value {} out of bounds [{},{}]".format(val,min_p,max_p), (val,))
+        else: #if number was "small" enough or specified with signed integer.
+            if val>max_p or val<min_p:
+                #pass
+                raise ParseException("IMMEDIATE OUT OF RANGE FOR SIGNED: Value {} out of bounds [{},{}]".format(val,min_p,max_p), (val,))
 
 def ASSERT_EQ(a1, a2):
     if a1 != a2:
