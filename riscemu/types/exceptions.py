@@ -114,7 +114,7 @@ class MemoryAlignmentException(RiscemuBaseException):
 
 def ASSERT_WORD_ALIGNED(address, ins):
     if address % 4 != 0:
-      raise MemoryAlignmentException("During execution of {}: Memory address 0x{:08x} is not a multple of {}!".format(ins, address, 4))
+      raise MemoryAlignmentException("During execution of {}: Memory address 0x{:08x} is not a multiple of {}!".format(ins, address, 4))
 
 
 class OutOfMemoryException(RiscemuBaseException):
