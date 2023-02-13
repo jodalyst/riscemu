@@ -466,3 +466,16 @@ class RV32I(InstructionSet):
         rd, rs = ins.get_reg(0), ins.get_reg(1)
         self.regs.set(rd, Int32(-1) ^ self.regs.get(rs))
 
+    # Add instructions to start/stop state saving for catsoop debug
+    def instruction_startlog(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 0)
+        pass # nop
+    
+    def instruction_stoplog(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 0)
+        pass # nop
+
+    # Add instruction for catsoop debug breakpoint
+    def instruction_csbreak(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 0)
+        pass # stuff happens on the js side
