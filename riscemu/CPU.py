@@ -14,7 +14,7 @@ from .config import RunConfig
 from .MMU import MMU
 from .colors import FMT_CPU, FMT_NONE, FMT_ERROR
 from .debug import launch_debug_session
-from .types.exceptions import RiscemuBaseException, LaunchDebuggerException
+from .types.exceptions import RiscemuBaseException, LaunchDebuggerException, StackOverflowException
 from .syscall import SyscallInterface, get_syscall_symbols
 from .types import CPU, ProgramLoader, Int32, BinaryDataMemorySection
 from .parser import AssemblyFileLoader
@@ -60,6 +60,8 @@ class UserModeCPU(CPU):
         launch_debugger = False
 
         try:
+            if self.regs.get('sp') < self.conf.stack_size - 4096:
+                raise StackOverflowException("You have run out of space on the stack. This is likely due to infinite recursion or improper stack discipline.")
             self.cycle += 1
             ins = self.mmu.read_ins(self.pc)
             if verbose:

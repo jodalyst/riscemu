@@ -197,6 +197,9 @@ class NumberFormatException(RiscemuBaseException):
             self.msg
         )
 
+class StackOverflowException(RiscemuBaseException):
+      def __init__(self,msg):
+          self.msg = msg
 
 # this exception is not printed and simply signals that an interactive debugging session is
 class LaunchDebuggerException(RiscemuBaseException):
