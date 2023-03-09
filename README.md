@@ -12,7 +12,7 @@ This emulator contains:
 * RISC-V Assembly loader
 * Emulation for most parts of the basic RISC-V instruction set and the M and A extensions
 * Naive memory emulator
-* Basic implementation of some syscalls 
+* Basic implementation of some syscalls
 * A debugging environment
 
 ## Installation:
@@ -20,6 +20,8 @@ This emulator contains:
 ```bash
 $ pip install riscemu
 ```
+
+bug
 
 ## Running simple Assembly:
 A couple of basic assembly programs are provided inside `examples/`, such as [`hello-world.asm`](examples/hello-world.asm).
@@ -33,7 +35,7 @@ Hello world
 Program exited with code 0
 ```
 
-The [`read` syscall](docs/syscalls.md) defaults to readline behaviour. Reading "true chunks" (ignoring newlines) is currently not supported.  
+The [`read` syscall](docs/syscalls.md) defaults to readline behaviour. Reading "true chunks" (ignoring newlines) is currently not supported.
 
 See the docs on [asembly](docs/assembly.md) for more detail on how to write assembly code for this emulator.
 See the [list of implemented syscalls](docs/syscalls.md) for more details on how to syscall.
@@ -71,10 +73,10 @@ disable_io              Disallow reading/writing from stdin/stdout/stderr
 --instruction-sets INSTRUCTION_SETS: (-is)
                         A list of comma separated instruction sets you want to load:
                         Currently implemented: RV32I, RV32M
-``` 
+```
 
-If multiple files are specified, all are loaded into memeory, but only the last one is executed. This might be improved 
-later, maybe the `_init` section of each binary is executed before the main loop starts? 
+If multiple files are specified, all are loaded into memeory, but only the last one is executed. This might be improved
+later, maybe the `_init` section of each binary is executed before the main loop starts?
 
 If `stack_size` is greater than zero, a stack is allocated and initialized, with the `sp` register pointing to the end of the stack.
 
@@ -90,17 +92,17 @@ See [docs/debugging.md](docs/debugging.md) for more info.
 Check out the [documentation](https://riscemu.readthedocs.io/en/latest/riscemu.html).
 
 ## Accessing local documentation:
-To generate your local documentation, first install everything in `sphinx-docs/requirements.txt`. Then run `./generate-docs.sh`, which will 
+To generate your local documentation, first install everything in `sphinx-docs/requirements.txt`. Then run `./generate-docs.sh`, which will
 generate and make all doc files for you. Finally, you can open the docs locall by runnint `open sphinx-docs/build/html/index.html`.
 
 ## Resources:
   * Pseudo ops: https://www.codetd.com/article/8981522
   * detailed instruction definition: https://msyksphinz-self.github.io/riscv-isadoc/html/rvi.html#add
   * RISC-V reference card: https://www.cl.cam.ac.uk/teaching/1617/ECAD+Arch/files/docs/RISCVGreenCardv8-20151013.pdf
-  
+
 ## TODO:
  * Correctly handle 12 and 20 bit immediate (currently not limited to bits at all)
  * Add a cycle limit to the options and CPU to catch infinite loops
  * Move away from `print` and use `logging.logger` instead
  * Writer proper tests
- 
+
