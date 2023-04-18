@@ -217,7 +217,6 @@ class RV32I(InstructionSet):
     def instruction_slti(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 3)
         rd, rs1, imm = self.parse_rd_rs_imm(ins)
-        #print(f"rs1:{rs1} and imm: {imm}")
         self.regs.set(
             rd,
             Int32(int(rs1 < imm))
@@ -234,7 +233,6 @@ class RV32I(InstructionSet):
     def instruction_sltiu(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 3)
         dst, rs1, imm = self.parse_rd_rs_imm(ins, signed=False)
-        #print(f"rs1:{rs1} and imm: {imm}")
         self.regs.set(
             dst,
             Int32(int(rs1 < imm))
@@ -276,142 +274,19 @@ class RV32I(InstructionSet):
         if rs1 >= rs2:
             self.pc = dst.unsigned_value
 
-    # technically deprecated
-    def instruction_j(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 1)
-        addr = ins.get_imm(0)
-        self.pc = addr
-
     def instruction_jal(self, ins: 'Instruction'):
-        reg = 'ra'  # default register is ra
-        if len(ins.args) == 1:
-            addr = ins.get_imm(0)
-        else:
-            ASSERT_LEN(ins.args, 2)
-            reg = ins.get_reg(0)
-            addr = ins.get_imm(1)
-        self.regs.set(reg, Int32(self.pc))
-        self.pc = addr
-
-    # zero pseudo-ops:
-    #beqz, bnez, bltz, bgez, bgtz, blez
-
-    def instruction_beqz(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
-        rs1 = ins.get_reg(0)
-        dst = ins.get_imm(1)
-        if Int32(self.regs.get(rs1)) == 0:
-            self.pc = dst
-
-    def instruction_bnez(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
-        rs1 = ins.get_reg(0)
-        dst = ins.get_imm(1)
-        if Int32(self.regs.get(rs1)) != 0:
-            self.pc = dst
-
-    def instruction_bltz(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
-        rs1 = ins.get_reg(0)
-        dst = ins.get_imm(1)
-        if Int32(self.regs.get(rs1)) < 0:
-            self.pc = dst
-
-    def instruction_bgtz(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
-        rs1 = ins.get_reg(0)
-        dst = ins.get_imm(1)
-        if Int32(self.regs.get(rs1)) > 0:
-            self.pc = dst
-
-    def instruction_bgez(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
-        rs1 = ins.get_reg(0)
-        dst = ins.get_imm(1)
-        if Int32(self.regs.get(rs1)) >= 0:
-            self.pc = dst
-
-    def instruction_blez(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
-        rs1 = ins.get_reg(0)
-        dst = ins.get_imm(1)
-        if Int32(self.regs.get(rs1)) <= 0:
-            self.pc = dst
-
-    #pseudo instructions bgt ble bgtu bleu
-
-    def instruction_bgt(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 3)
-        rs1, rs2, dst = self.parse_rs_rs_imm(ins)
-        if rs1 > rs2:
-            self.pc = dst.unsigned_value
-
-    def instruction_ble(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 3)
-        rs1, rs2, dst = self.parse_rs_rs_imm(ins)
-        if rs1 <= rs2:
-            self.pc = dst.unsigned_value
-
-    def instruction_bgtu(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 3)
-        rs1, rs2, dst = self.parse_rs_rs_imm(ins, signed=False)
-        if rs1 > rs2:
-            self.pc = dst.unsigned_value
-
-    def instruction_bleu(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 3)
-        rs1, rs2, dst = self.parse_rs_rs_imm(ins, signed=False)
-        if rs1 <= rs2:
-            self.pc = dst.unsigned_value
-
-    #jds pseudo-op
-    def instruction_call(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 1)
-        addr = ins.get_imm(0)
-        self.regs.set('ra', Int32(self.pc))
-        self.pc = addr
-
-    #jds pseudo-op
-    def instruction_jr(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 1)
-        reg = ins.get_reg(0)
-        val = self.regs.get(reg)
-        thing = val&(0xFFFFFFFE)
-        #self.regs.set(reg, self.pc)
-        self.pc = thing
-
-    #modified by jds
-    def instruction_jalr(self, ins: 'Instruction'):
-        reg = 'ra'  # default register is ra
-        if len(ins.args) == 1:
-            addr = ins.get_reg(0)
-            thing = self.regs.get(addr)
-            addr = thing #&(0xFFFFFFFE)
-        else:
-            #ASSERT_LEN(ins.args, 2)
-            reg, addr = self.parse_mem_ins(ins)
-            #reg = ins.get_reg(0)
-            #addr = ins.get_imm(1)
-            #thing = self.regs.get(addr)
-            #addr = addr&(0xFFFFFFFE)
-            #reg = ins.get_reg(0)
-            #addr = ins.get_imm(1)
-        self.regs.set(reg, Int32(self.pc))
-        self.pc = addr
-
-    '''
-    def instruction_jalr(self, ins: 'Instruction'):
-        print(ins.args)
         ASSERT_LEN(ins.args, 2)
         reg = ins.get_reg(0)
         addr = ins.get_imm(1)
         self.regs.set(reg, Int32(self.pc))
         self.pc = addr
-    '''
 
-    def instruction_ret(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 0)
-        self.pc = self.regs.get('ra').value
+    #modified by jds
+    def instruction_jalr(self, ins: 'Instruction'):
+        ASSERT_LEN(ins.args, 2)
+        reg, addr = self.parse_mem_ins(ins)
+        self.regs.set(reg, Int32(self.pc))
+        self.pc = addr
 
     def instruction_ecall(self, ins: 'Instruction'):
         self.instruction_scall(ins)
@@ -434,38 +309,7 @@ class RV32I(InstructionSet):
 
         print(FMT_DEBUG + "Debug instruction encountered at 0x{:08X}".format(self.pc - 1) + FMT_NONE)
         raise LaunchDebuggerException()
-
-    def instruction_nop(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 0)
-        pass
-
-    def instruction_li(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
-        reg = ins.get_reg(0)
-        immediate = ins.get_imm(1)
-        self.regs.set(reg, Int32(immediate))
-
-    def instruction_la(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
-        reg = ins.get_reg(0)
-        immediate = ins.get_imm(1)
-        self.regs.set(reg, Int32(immediate))
-
-    def instruction_mv(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
-        rd, rs = ins.get_reg(0), ins.get_reg(1)
-        self.regs.set(rd, self.regs.get(rs))
-
-    def instruction_neg(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
-        rd, rs = ins.get_reg(0), ins.get_reg(1)
-        self.regs.set(rd, Int32(0)-self.regs.get(rs))
-
-    def instruction_not(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
-        rd, rs = ins.get_reg(0), ins.get_reg(1)
-        self.regs.set(rd, Int32(-1) ^ self.regs.get(rs))
-
+ 
     # Add instructions to start/stop state saving for catsoop debug
     def instruction_startlog(self, ins: 'Instruction'):
         ASSERT_LEN(ins.args, 0)
