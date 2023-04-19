@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="riscemunopseudoinstructions",
+    name="riscemu",
     version=riscemu.__version__,
     author=riscemu.__author__,
     author_email="pip@antonlydike.de",
