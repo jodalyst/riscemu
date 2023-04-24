@@ -283,7 +283,7 @@ class RV32I(InstructionSet):
 
     #modified by jds
     def instruction_jalr(self, ins: 'Instruction'):
-        ASSERT_LEN(ins.args, 2)
+        ASSERT_LEN(ins.args, 3)
         reg, addr = self.parse_mem_ins(ins)
         self.regs.set(reg, Int32(self.pc))
         self.pc = addr
